@@ -3,6 +3,11 @@
 A modified version of JGINYUE's own **JYRPL014** BIOS for the **JGINYUE B760M Snow Dream D4** (micro-ATX, LGA1700, DDR4).
 It fixes the vendor's restart bug, sets better factory defaults, removes the Chinese language pack, replaces the boot-screen logo and adds a POST beep.
 
+<p align="center">
+  <a href="https://www.jginyue.com/index/Article/show/cat_id/22/id/12"><img src="https://jginyue.com/public/upload/72/0714131283fe380ab6a1915549b905.png" alt="JGINYUE B760M Snow Dream D4" width="480"></a><br>
+  <sub>JGINYUE B760M Snow Dream D4 – image: <a href="https://www.jginyue.com/index/Article/show/cat_id/22/id/12">JGINYUE official product page</a></sub>
+</p>
+
 > [!WARNING]
 > **For the JGINYUE B760M Snow Dream D4 only.** Flashing it to any other board, including the B760I GAMING (same AMI template, different layout), will brick that board.
 > The flash script checks the BIOS version and the flash descriptor and refuses to run on anything else.
