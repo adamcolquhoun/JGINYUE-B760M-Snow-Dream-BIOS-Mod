@@ -1,5 +1,5 @@
 @echo off
-:: Flash JYRPL014_mod7.bin to a JGINYUE B760M Snow Dream D4 (vendor BIOS JYRPL014 + the changes in CHANGELOG.md).
+:: Flash JYRPL014_mod8.bin to a JGINYUE B760M Snow Dream D4 (vendor BIOS JYRPL014 + the changes in CHANGELOG.md).
 :: ONLY for the B760M Snow Dream. The script refuses to run on any other board.
 :: Needs FPTW64.exe (from JGINYUE's own BIOS package) in this folder. Run as Administrator.
 :: Do not interrupt or power off once writing starts.
@@ -8,8 +8,8 @@ cd /d "%~dp0"
 net session >nul 2>&1 || (echo Run this as Administrator. & pause & exit /b 1)
 if not exist FPTW64.exe (echo FPTW64.exe not found - copy it here from the vendor BIOS package. See INSTALL.md. & pause & exit /b 1)
 
-set IMG=..\firmware\JYRPL014_mod7.bin
-set EXPECT=aa689bb935da68e63b7abb235a65ab44ce738ae3c32b7cc540262cd31c871751
+set IMG=..\firmware\JYRPL014_mod8.bin
+set EXPECT=920974c22dd03eca90fef70676626128dcb1e93e62c05385c8982b3113377906
 
 echo === Check 1: image integrity ===
 if not exist %IMG% (echo %IMG% not found - NOT flashing. & pause & exit /b 1)

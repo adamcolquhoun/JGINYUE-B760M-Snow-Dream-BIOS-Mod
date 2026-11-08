@@ -1,13 +1,13 @@
 # Changelog – JGINYUE B760M Snow Dream D4 modded BIOS
 
 Base image: JGINYUE **JYRPL014** (16 MiB full chip), SHA-256 `312e3bdcece9192135b6fd813761d0b035ae82e62146029b106b93206390b3a5`.
-Current release: **v7** – `firmware/JYRPL014_mod7.bin`, SHA-256 `aa689bb935da68e63b7abb235a65ab44ce738ae3c32b7cc540262cd31c871751`.
+Current release: **v8** – `firmware/JYRPL014_mod8.bin`, SHA-256 `920974c22dd03eca90fef70676626128dcb1e93e62c05385c8982b3113377906`.
 
 Offsets below are flash (image) offsets unless noted as *DXE+…* (offset inside the decompressed main DXE firmware volume, which is LZMA-compressed in FFS file `9E21FD93-9C72-4C15-8C4B-E77F1DB2D792` at flash `0x4910C0`) or *module+…* (offset inside that PE/TE module).
 
 ---
 
-## Complete list of alterations (v7 vs. vendor JYRPL014)
+## Complete list of alterations (v8 vs. vendor JYRPL014)
 
 Changed flash areas: `0x400000–0x401FFF` (factory defaults), `0x491000–0x7CCFFF` (main DXE volume), `0xDF8000`, `0xF50000`, `0xF6B000` (one 4 KB block each, PEI code).
 **Not changed:** flash descriptor (`0x0–0xFFF`), Intel ME region (`0x1000–0x3D8FFF`, ME 16.1.25.1917 as shipped), CPU microcode, Secure Boot keys (PK/KEK/db/dbx), SMBIOS data, the full-screen logo, the rest of the BIOS region.
@@ -72,16 +72,16 @@ All edits are **in place and the same length**. AMI's setup browser uses a prebu
 
 ### 6. POST beep
 
-A 103-byte routine (`build/beep.s`) was placed in unused space at the end of the `.text` section of **CapsuleRuntimeDxe** (RVA `0x1C70`, raw zero padding). The module's entry point was redirected to it (`AddressOfEntryPoint 0x1124 → 0x1C70`, `.text VirtualSize 0xC6F → 0xCD7`). The module is byte-identical to the B760I's (SHA-256 checked). The routine:
+A 115-byte routine (`build/beep.s`) was placed in unused space at the end of the `.text` section of **CapsuleRuntimeDxe** (RVA `0x1C70`, raw zero padding). The module's entry point was redirected to it (`AddressOfEntryPoint 0x1124 → 0x1C70`, `.text VirtualSize 0xC6F → 0xCE3`). The module is byte-identical to the B760I's (SHA-256 checked). The routine:
 
 1. reads the CPU base frequency from `CPUID 0x16` (falls back to 2500 MHz);
-2. programs 8254 counter 2 for a square wave with divisor `0x254` (≈ 2,002 Hz) and sets bits 0–1 of port `0x61` (speaker on);
+2. programs 8254 counter 2 for a square wave with divisor `0x4A9` (≈ 1,000 Hz) and sets bits 0–1 of port `0x61` (speaker on);
 3. waits ≈ 0.5 s using the TSC;
-4. switches the speaker off and jumps to the original entry point.
+4. switches the speaker off, **parks counter 2** (mode 0, one-shot) so it stops oscillating – a later write that re-enables the speaker can no longer produce a stray tone – and jumps to the original entry point.
 
 It makes no calls and writes no memory except the stack. It needs a speaker on the SPEAKER header and the 8254 clock-gate default from §2.
 
-**USB device beeps disabled (v7).** The vendor's AMI USB driver beeps (8 short high beeps) for every USB device it enumerates during POST, which sounded right after the boot beep. Its beep routine exists in two modules:
+**USB device beeps disabled.** The vendor's AMI USB driver beeps (8 short high beeps) for every USB device it enumerates during POST, which sounded right after the boot beep. Its beep routine exists in two modules:
 
 | Module | FFS GUID | Location | Change |
 |---|---|---|---|
@@ -98,11 +98,12 @@ The main DXE volume and AMITSE / AMITSESetupData were recompressed with the 7-Zi
 
 ## Release history
 
-All builds 2026-11. v6 and v7 were flashed and confirmed working on a real Snow Dream board; earlier versions were never flashed.
+All builds 2026-11. v6 and v7 were flashed and confirmed working on a real Snow Dream board; v8 (beep-only change, same code as the B760I mod9) is not yet flashed on one. Earlier versions were never flashed.
 
 | Release | Changes |
 |---|---|
-| **v7** | AMI USB-device beeps disabled in UsbRtDxe and UsbRtSmm (§6), so the boot beep is the only beep on a normal boot. 2 bytes. |
+| **v8** | Boot beep 2 kHz → 1 kHz, counter 2 parked after the beep (§6). |
+| v7 | AMI USB-device beeps disabled in UsbRtDxe and UsbRtSmm (§6), so the boot beep is the only beep on a normal boot. 2 bytes. |
 | v6 | Quiet Boot hidden **in place** (§3). v3–v5 hid it by inserting 4 bytes, which shifted the CheckBox and left its AMITSESetupData entry pointing at the wrong opcode. Fixed before any flash. |
 | v5 | POST beep (§6); 8254 clock-gate default → 2. |
 | v4 | All remaining CF9 `0x06` writes → `0x0E` (§1 rows 2–10) – fixes *Save Changes and Reset* in setup powering off. |
