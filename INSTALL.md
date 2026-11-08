@@ -29,10 +29,10 @@
 3. Optional: check the image hash yourself in PowerShell:
 
    ```powershell
-   Get-FileHash .\firmware\JYRPL014_mod6.bin -Algorithm SHA256
+   Get-FileHash .\firmware\JYRPL014_mod7.bin -Algorithm SHA256
    ```
 
-   It must be `6264FFAC3F7DA70A54A630D0AA1FB08F554BD87C6988BBC03968631A4A90DA49`. The script checks this too.
+   It must be `AA689BB935DA68E63B7ABB235A65AB44CE738AE3C32B7CC540262CD31C871751`. The script checks this too.
 
 ## Step 2 – Flash
 
@@ -86,7 +86,7 @@ Do not run the ME update in the same Windows session as the BIOS flash. Skipping
 From an admin prompt in `tools\`:
 
 ```bat
-FPTW64.exe -verify ..\firmware\JYRPL014_mod6.bin
+FPTW64.exe -verify ..\firmware\JYRPL014_mod7.bin
 ```
 
 Only the NVRAM area (your settings, which change as you use the PC) and possibly the ME data area should differ.

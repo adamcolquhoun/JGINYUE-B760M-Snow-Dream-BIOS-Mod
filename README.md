@@ -8,7 +8,7 @@ It fixes the vendor's restart bug, sets better factory defaults, removes the Chi
 > The flash script checks the BIOS version and the flash descriptor and refuses to run on anything else.
 > Flashing firmware always carries risk. This board has **no USB crisis recovery** from Windows; if a flash fails, recovery needs an SPI programmer (e.g. CH341A + SOIC-8 clip) and the backup the script makes. You flash at your own risk.
 
-**Status: flashed and confirmed working on a real B760M Snow Dream D4.** This is a port of the [B760I GAMING mod](https://github.com/adamcolquhoun/JGINYUE-B760I-Gaming-BIOS-Mod); both boards share the same AMI code base and the patches sit at identical locations (except one PEI offset, see CHANGELOG).
+**Status: v7 flashed and confirmed working on a real B760M Snow Dream D4.** This is a port of the [B760I GAMING mod](https://github.com/adamcolquhoun/JGINYUE-B760I-Gaming-BIOS-Mod); both boards share the same AMI code base and the patches sit at identical locations (except one PEI offset, see CHANGELOG).
 
 ## What's changed (summary)
 
@@ -19,7 +19,7 @@ It fixes the vendor's restart bug, sets better factory defaults, removes the Chi
 | **Setup menu** | *Quiet Boot* and *System Language* options hidden (always off / always English). |
 | **Language** | Chinese (zh-chs) strings removed from Setup and the AMI setup browser (2,727 strings) and the 615 Chinese font glyphs blanked; English only. |
 | **Boot screen** | The full-screen vendor logo never shows (the file itself is left untouched). The classic text POST screen is used, with the American Megatrends logo (white on black) in place of the small "ami" logo. |
-| **POST beep** | One ~2 kHz, ~0.5 s beep through the motherboard speaker header on every boot. |
+| **POST beep** | One ~2 kHz, ~0.5 s beep through the motherboard speaker header on every boot – and only that one: AMI's per-USB-device beeps are disabled. Error beep codes still sound. |
 | **Untouched** | Intel ME region, CPU microcode, Secure Boot keys, flash descriptor, everything else. |
 
 Full byte-level details: **[CHANGELOG.md](CHANGELOG.md)**. How to flash: **[INSTALL.md](INSTALL.md)**.
@@ -28,8 +28,8 @@ Full byte-level details: **[CHANGELOG.md](CHANGELOG.md)**. How to flash: **[INST
 
 | Path | What |
 |---|---|
-| `firmware/JYRPL014_mod6.bin` | The modded 16 MiB full-chip image (descriptor + ME + BIOS). |
-| `firmware/SHA256SUMS.txt` | `6264ffac3f7da70a54a630d0aa1fb08f554bd87c6988bbc03968631a4a90da49` |
+| `firmware/JYRPL014_mod7.bin` | The modded 16 MiB full-chip image (descriptor + ME + BIOS). |
+| `firmware/SHA256SUMS.txt` | `aa689bb935da68e63b7abb235a65ab44ce738ae3c32b7cc540262cd31c871751` |
 | `tools/flash_bios.cmd` | Safe flashing script (hash, board and descriptor checks, full backup, then flash). |
 | `tools/update_me.cmd` | Optional Intel ME 16.1.42.2872 update (Intel files not included – see INSTALL.md). |
 | `build/` | The build script, its helpers, the beep stub source (`beep.s`) and the logo assets. Reference only – see [build/README.md](build/README.md). |

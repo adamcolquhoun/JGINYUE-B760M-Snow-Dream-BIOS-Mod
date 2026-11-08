@@ -1,13 +1,13 @@
 # Changelog – JGINYUE B760M Snow Dream D4 modded BIOS
 
 Base image: JGINYUE **JYRPL014** (16 MiB full chip), SHA-256 `312e3bdcece9192135b6fd813761d0b035ae82e62146029b106b93206390b3a5`.
-Current release: **v6** – `firmware/JYRPL014_mod6.bin`, SHA-256 `6264ffac3f7da70a54a630d0aa1fb08f554bd87c6988bbc03968631a4a90da49`.
+Current release: **v7** – `firmware/JYRPL014_mod7.bin`, SHA-256 `aa689bb935da68e63b7abb235a65ab44ce738ae3c32b7cc540262cd31c871751`.
 
 Offsets below are flash (image) offsets unless noted as *DXE+…* (offset inside the decompressed main DXE firmware volume, which is LZMA-compressed in FFS file `9E21FD93-9C72-4C15-8C4B-E77F1DB2D792` at flash `0x4910C0`) or *module+…* (offset inside that PE/TE module).
 
 ---
 
-## Complete list of alterations (v6 vs. vendor JYRPL014)
+## Complete list of alterations (v7 vs. vendor JYRPL014)
 
 Changed flash areas: `0x400000–0x401FFF` (factory defaults), `0x491000–0x7CCFFF` (main DXE volume), `0xDF8000`, `0xF50000`, `0xF6B000` (one 4 KB block each, PEI code).
 **Not changed:** flash descriptor (`0x0–0xFFF`), Intel ME region (`0x1000–0x3D8FFF`, ME 16.1.25.1917 as shipped), CPU microcode, Secure Boot keys (PK/KEK/db/dbx), SMBIOS data, the full-screen logo, the rest of the BIOS region.
@@ -81,6 +81,15 @@ A 103-byte routine (`build/beep.s`) was placed in unused space at the end of the
 
 It makes no calls and writes no memory except the stack. It needs a speaker on the SPEAKER header and the 8254 clock-gate default from §2.
 
+**USB device beeps disabled (v7).** The vendor's AMI USB driver beeps (8 short high beeps) for every USB device it enumerates during POST, which sounded right after the boot beep. Its beep routine exists in two modules:
+
+| Module | FFS GUID | Location | Change |
+|---|---|---|---|
+| UsbRtDxe | `171F43DC-C4D9-47A6-9641-65DDCDD5AA30` | DXE+`0x4F0323` (module+`0xBABF`) | `je` → `jmp` (`74` → `EB`) |
+| UsbRtSmm (SMM) | `04EAAAA1-29A1-11D7-8838-00500473D4EB` | DXE+`0x88679D` (module+`0xD041`) | `je` → `jmp` (`74` → `EB`) |
+
+In both, the routine starts with `test dword [rax+6C9h], 200000h` / `je skip`; making that jump unconditional means it never touches the speaker. AMI's StatusCode beeps are **left alone**: its progress-code beep table is empty, so it only beeps on error codes (e.g. memory or video failures), which remain useful for diagnosis.
+
 ### 7. Recompression
 
 The main DXE volume and AMITSE / AMITSESetupData were recompressed with the 7-Zip **LZMA SDK** encoder (`lzma.exe e -d24`: no end marker, 16 MiB dictionary, props `5D 00 00 00 01`), the format EDK2's `LzmaDecompress` expects. Every stream was checked by decoding it with the SDK's reference decoder (`LZMA_FINISH_END`), and the output matched the intended data byte for byte. FFS header checksums were recalculated. Where a nested file got smaller, a standard FFS pad file fills the gap so the next file keeps its position. A full re-extraction of the image gives every module with no errors.
@@ -89,11 +98,12 @@ The main DXE volume and AMITSE / AMITSESetupData were recompressed with the 7-Zi
 
 ## Release history
 
-All builds 2026-11. Only v6 is published and has been flashed and confirmed working on a real Snow Dream board; earlier versions were never flashed.
+All builds 2026-11. v6 and v7 were flashed and confirmed working on a real Snow Dream board; earlier versions were never flashed.
 
 | Release | Changes |
 |---|---|
-| **v6** | Quiet Boot hidden **in place** (§3). v3–v5 hid it by inserting 4 bytes, which shifted the CheckBox and left its AMITSESetupData entry pointing at the wrong opcode. Fixed before any flash. |
+| **v7** | AMI USB-device beeps disabled in UsbRtDxe and UsbRtSmm (§6), so the boot beep is the only beep on a normal boot. 2 bytes. |
+| v6 | Quiet Boot hidden **in place** (§3). v3–v5 hid it by inserting 4 bytes, which shifted the CheckBox and left its AMITSESetupData entry pointing at the wrong opcode. Fixed before any flash. |
 | v5 | POST beep (§6); 8254 clock-gate default → 2. |
 | v4 | All remaining CF9 `0x06` writes → `0x0E` (§1 rows 2–10) – fixes *Save Changes and Reset* in setup powering off. |
 | v3 | Quiet Boot default off; text-screen logo replaced (full-screen logo left untouched). |
