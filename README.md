@@ -24,6 +24,18 @@ It fixes the vendor's restart bug, sets better factory defaults, removes the Chi
 
 Full byte-level details: **[CHANGELOG.md](CHANGELOG.md)**. How to flash: **[INSTALL.md](INSTALL.md)**.
 
+## Base BIOS and microcode
+
+Built on JGINYUE's **JYRPL014** BIOS, the vendor's **0x12F microcode** release. 0x12F is Intel's 2025 update for the 13th/14th-gen Raptor Lake Vmin-shift instability. The mod does **not** touch the microcode: every update below is byte-identical to the vendor image.
+
+| CPUID | CPUs | Revision | Date |
+|---|---|---|---|
+| `B0671` | 13th/14th-gen Core (Raptor Lake-S, B0) | **`0x12F`** | 2025-03-17 |
+| `B06F2`, `B06F5` | 13th/14th-gen Core (Raptor Lake-S, C0/H0 – Alder Lake die) | `0x20` | 2022-03-31 |
+| `B0670` | Raptor Lake-S (early) | `0x0E` | 2022-02-20 |
+| `90672`, `90675` | 12th-gen Core (Alder Lake-S) | `0x36`, `0x1E` | 2024-02-22, 2022-02-21 |
+| `90670`, `90671`, `90674` | Alder Lake (pre-production) | `0x19`, `0x1C`, `0x217` | 2020–2021 |
+
 ## Files
 
 | Path | What |
