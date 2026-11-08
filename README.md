@@ -8,8 +8,7 @@ It fixes the vendor's restart bug, sets better factory defaults, removes the Chi
 > The flash script checks the BIOS version and the flash descriptor and refuses to run on anything else.
 > Flashing firmware always carries risk. This board has **no USB crisis recovery** from Windows; if a flash fails, recovery needs an SPI programmer (e.g. CH341A + SOIC-8 clip) and the backup the script makes. You flash at your own risk.
 
-> [!IMPORTANT]
-> **Status: not yet flashed on a real Snow Dream board.** This is a port of the [B760I GAMING mod](https://github.com/adamcolquhoun/JGINYUE-B760I-Gaming-BIOS-Mod), which is flashed and confirmed working. Both boards share the same AMI code base and the patches sit at identical locations (except one PEI offset, see CHANGELOG). The image has been verified offline (SDK decode of every recompressed stream, full re-extraction, setup-index reference check), but nobody has booted it on this board yet.
+**Status: flashed and confirmed working on a real B760M Snow Dream D4.** This is a port of the [B760I GAMING mod](https://github.com/adamcolquhoun/JGINYUE-B760I-Gaming-BIOS-Mod); both boards share the same AMI code base and the patches sit at identical locations (except one PEI offset, see CHANGELOG).
 
 ## What's changed (summary)
 

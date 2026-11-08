@@ -1,7 +1,5 @@
 # Installing the modded BIOS – JGINYUE B760M Snow Dream D4
 
-> [!IMPORTANT]
-> **This image has not yet been flashed on a real Snow Dream board.** The same changes are flashed and confirmed working on the sister board (B760I GAMING: same AMI code base, identical patch sites), and the image passed every offline check, but you are the first to run it on this board. Keep the backup the script makes, and ideally have an SPI programmer to hand.
 
 > [!CAUTION]
 > **B760M Snow Dream D4 only.** Do not flash this on any other board (the B760I GAMING looks similar inside but has a different layout).

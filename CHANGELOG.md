@@ -89,7 +89,7 @@ The main DXE volume and AMITSE / AMITSESetupData were recompressed with the 7-Zi
 
 ## Release history
 
-All builds 2026-11. Only v6 is published; earlier versions were never flashed.
+All builds 2026-11. Only v6 is published and has been flashed and confirmed working on a real Snow Dream board; earlier versions were never flashed.
 
 | Release | Changes |
 |---|---|
