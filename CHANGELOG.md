@@ -98,7 +98,7 @@ The main DXE volume and AMITSE / AMITSESetupData were recompressed with the 7-Zi
 
 ## Release history
 
-All builds 2026-11. v6 and v7 were flashed and confirmed working on a real Snow Dream board; v8 (beep-only change, same code as the B760I mod9) is not yet flashed on one. Earlier versions were never flashed.
+All builds 2026-11. v6, v7 and v8 were flashed and confirmed working on a real Snow Dream board. Earlier versions were never flashed.
 
 | Release | Changes |
 |---|---|
